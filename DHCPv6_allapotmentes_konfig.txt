@@ -1,0 +1,13 @@
+en
+conf t
+no ip domain-lookup
+hostname R1
+banner motd "Unauthorized Access is Prohibited!"
+ena secret class
+line vty 0 15
+pass cisco
+login
+line con 0
+pass cisco
+login
+logging syn
