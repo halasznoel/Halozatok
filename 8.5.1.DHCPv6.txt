@@ -1,0 +1,92 @@
+S1-S2:
+ena
+conf t
+hostname S1
+no ip domain-lookup
+ena secret class
+line console 0
+pass cisco
+login
+line vty 0 15
+pass cisco
+login
+ex
+service password-encryption
+banner motd "unauthorized access is prohibited"
+int range f0/2-24,g0/2
+sh
+ex
+ex
+copy running-config startup-config
+
+
+
+R1:
+ena
+conf t
+ho R1
+no ip domain-l
+ena sec class
+line con 0
+pass cisco
+login
+line vty 0 15
+pass cisco
+login
+exit
+ser pa
+banner motd "unauthorized access is prohibited"
+ipv u
+do wr
+int g0/0/0
+ipv add 2001:db8:acad:2::1/64
+ipv add fe80::1 l
+int g0/0/1
+ipv add 2001:db8:acad:1::1/64
+ipv add fe80::1 l
+ex
+ipv6 dhcp pool STATELESS
+dns-server 2001:db8:acad::254
+domain-name stateless.com
+exit
+int g0/0/1
+ipv6 dhcp server STATELESS
+ipv6 nd other-config-flag
+
+
+R2:
+ena
+conf t
+ho R2
+no ip domain-l
+ena sec class
+line con 0
+pass cisco
+login
+line vty 0 15
+pass cisco
+login
+exit
+ser pa
+banner motd "unauthorized access is prohibited"
+ipv u
+do wr
+int g0/0/0
+ipv add 2001:db8:acad:2::2/64
+ipv add fe80::2 l
+int g0/0/1
+ipv add 2001:db8:acad:1::1/64
+ipv add fe80::2 l
+exit
+ipv6 dhcp pool STATEFUL
+address prefix 2001:db8:acad:3:aaa::/80
+dns-server 2001:db8:acad::254
+dom stateful.com
+exit
+int g0/0/1
+ipv6 dhcp server STATEFUL
+ipv6 nd managed-config-flag
+end
+copy run start
+
+
