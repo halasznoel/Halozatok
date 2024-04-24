@@ -10,7 +10,8 @@ login
 line vty 0 15
 pass cisco
 login
-ex
+end
+conf t
 service password-encryption
 banner motd "unauthorized access is prohibited"
 int range f0/2-24,g0/2
@@ -33,7 +34,8 @@ login
 line vty 0 15
 pass cisco
 login
-exit
+end
+conf t
 ser pa
 banner motd "unauthorized access is prohibited"
 ipv u
@@ -66,7 +68,8 @@ login
 line vty 0 15
 pass cisco
 login
-exit
+end
+conf t
 ser pa
 banner motd "unauthorized access is prohibited"
 ipv u
