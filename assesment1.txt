@@ -1,0 +1,208 @@
+RTR-1
+
+ena
+conf t
+ip route 172.31.10.0 255.255.255.0 GigabitEthernet0/0/0
+ip route 172.31.20.0 255.255.255.0 GigabitEthernet0/0/0
+ip route 172.31.30.0 255.255.255.0 GigabitEthernet0/0/0
+enable secret cisco
+line console 0
+password cisco
+login
+line vty 0 15
+pass cisco
+login
+exit
+banner motd "cica"
+hostname RTR-1
+service pa
+int g0/0/0
+ip add 172.31.0.1 255.255.255.0
+desc "MIVA"
+no shu
+int s0/1/0
+ip add 209.165.201.2 255.255.255.252
+desc "mi"
+no shu
+
+int g0/0/1.40
+enc d 40
+ip add 172.31.40.1 255.255.255.0
+des lapat
+int g0/0/1.50
+enc d 50
+ip add 172.31.50.1 255.255.255.0
+des szia
+int g0/0/1.60
+enc d 60
+ip add 172.31.60.1 255.255.255.0
+des cicaaa
+int g0/0/1.99
+enc d 99
+ip add 172.31.99.17 255.255.255.240
+des kampihh
+int g0/0/1
+no shu
+int g0/0/1.99
+enc d 99 native
+------------------------
+SW3
+
+ena
+conf t
+int vlan 99
+ip add 172.31.99.18 255.255.255.240
+desc "EZIDEMINEK"
+no shu
+exit
+ip def 172.31.99.17
+username admin secret C1sco123!
+ip domain-name acad.pt
+crypto key generate rsa
+1024
+line vty 0 15
+tr i ssh
+login local
+exit
+vlan 40
+name BDG4
+vlan 50
+name BDG5
+vlan 60
+name BDG6
+vlan 99
+name Management
+
+int range f0/1-5
+sw mo acc
+sw ac vlan 40
+int range f0/6-10
+sw mo acc
+sw ac vlan 50
+int range f0/11-15
+sw mo acc
+sw ac vlan 60
+int f0/24
+sw mo acc
+sw ac vlan 99
+
+int g0/1
+sw mo trunk
+sw trunk nat vlan 99
+sw non
+
+enable secret class
+
+
+-----------------------------
+MSW1
+
+ena
+conf t
+vlan 10
+name FL1
+vlan 20
+name FL2
+vlan 30
+name FL3
+int range g1/0/1-2
+channel-group 1 mode active
+int range g1/0/3-4
+channel-group 2 mode active
+
+int port-channel 1
+sw mo trunk
+sw non
+int port-channel 2
+sw mo trunk
+sw non
+exit
+ip routing
+int g1/1/1
+no sw
+des cica
+ip add 172.31.0.2 255.255.255.0
+no shu
+des szia
+int vlan 10
+ip add 172.31.10.1 255.255.255.0
+no shu
+des cica
+int vlan 20
+ip add 172.31.20.1 255.255.255.0
+no shu
+des cic
+int vlan 30
+ip add 172.31.30.1 255.255.255.0
+no shu
+des cicaa
+
+-----------------------
+SW-1
+
+ena
+conf t
+vlan 10
+name FL1
+vlan 20
+name FL2
+vlan 30
+name FL3
+exit
+int range f0/7-10
+sw mo acc
+sw acc vlan 10
+int range f0/11-15
+sw mo acc
+sw acc vlan 20
+int range f0/16-24
+sw mo acc
+sw acc vlan 30
+
+int r g0/1-2
+channel-g 1 mode active
+int r f0/5-6
+channel-g 3 mode active
+
+
+int port-channel 3
+sw mo trunk
+sw non
+
+int port-channel 1
+sw mo trunk
+sw non
+
+----------------------------
+SW2
+
+ena
+conf t
+vlan 10
+name FL1
+vlan 20
+name FL2
+vlan 30
+name FL3
+exit
+int range f0/7-10
+sw mo acc
+sw acc vlan 10
+int range f0/11-15
+sw mo acc
+sw acc vlan 20
+int range f0/16-24
+sw mo acc
+sw acc vlan 30
+
+int r g0/1-2
+channel-g 2 mode active
+int r f0/5-6
+channel-g 3 mode active
+
+int port-channel 2
+sw mo trunk
+sw non
+int port-channel 3
+sw mo trunk
+sw non
